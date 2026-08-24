@@ -484,4 +484,15 @@ client.on('interactionCreate', async (interaction) => {
   }
 });
 
-client.login(DISCORD_TOKEN);
+client.login(DISCORD_TOKEN).catch((err) => {
+  console.error('Discord login failed:', err.message);
+});
+
+// Minimal health endpoint for Railway / Render / container hosts
+const port = process.env.PORT || 3000;
+http
+  .createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Zaxby Support is running');
+  })
+  .listen(port, () => console.log(`Health server listening on port ${port}`));
