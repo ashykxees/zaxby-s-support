@@ -55,28 +55,32 @@ const client = new Client({
 
 const DEPARTMENTS = [
   {
-    key: 'customer_support',
-    label: 'Customer Support',
-    description: 'General help, account questions, how-to.',
-    emoji: '💬',
+    key: 'general_support',
+    label: 'General Support',
+    description: 'General questions and account or in-game appeals.',
+    details: 'Open this ticket to contact our support team with any general questions, concerns, comments, or to appeal an in-game / Discord ban.',
+    emoji: '📧',
   },
   {
-    key: 'public_relations',
-    label: 'Public Relations',
-    description: 'Partnerships, press, business enquiries.',
-    emoji: '🤝',
+    key: 'staffing_support',
+    label: 'Staffing Support',
+    description: 'Staffing related matters and MR/HR reports.',
+    details: 'Open this ticket for staffing related matters, including MR/HR Team reports.',
+    emoji: '💼',
   },
   {
-    key: 'trust_safety',
-    label: 'Trust & Safety',
-    description: 'Abuse, moderation appeals, account safety.',
-    emoji: '🛡️',
+    key: 'relations_support',
+    label: 'Relations Support',
+    description: 'Relations and affiliate related matters.',
+    details: 'Open this ticket for relations / affiliate related matters.',
+    emoji: '👥',
   },
   {
-    key: 'billing',
-    label: 'Billing',
-    description: 'Subscriptions, refunds, invoices.',
-    emoji: '💳',
+    key: 'sos_support',
+    label: 'Need SOS Support?',
+    description: 'For emergencies and urgent matters.',
+    details: 'Please direct your emergency to a member of the Presidential Team\'s direct messages.',
+    emoji: '🚨',
   },
 ];
 
@@ -91,27 +95,21 @@ const SLASH_COMMANDS = [
 // ---------------------------------------------------------------------------
 function buildPanel() {
   const embed = new EmbedBuilder()
-    .setTitle('Panora Support')
-    .setDescription(
-      'Welcome to the Panora support desk. Our team is here to help with anything from account questions to billing to trust & safety concerns.\n\n' +
-      '**How it works**\n' +
-      '1. Pick the team that best matches what you need using the dropdown below.\n' +
-      '2. A short form will open — tell us your case title and describe what\'s going on.\n' +
-      '3. We\'ll create a private ticket channel visible only to you and the assigned team.\n' +
-      '4. A staff member will claim your case and reply as soon as they\'re available.\n\n' +
-      '**Before you open a case**\n' +
-      '> You need a Panora account linked to your Discord — sign in at my.panora.cc if you haven\'t already.\n' +
-      '> You can only have **one open case at a time**. If you\'ve already opened one on the dashboard or here, please continue there.\n' +
-      '> :bell: Please don\'t ping our team members — it slows your case down and may cause it to be closed without a reply.'
-    )
-    .setFooter({
-      text: 'Typical response times: within a few minutes during our team\'s active hours. Complex billing or moderation cases may take longer. Panora Connect · A product of Evercore Technologies Incorporated',
-    })
-    .setColor(0x5865f2);
+    .setTitle('Support')
+    .setDescription('Need to contact support? Choose the best option for your needs below.')
+    .setColor(0xed4245);
+
+  for (const dept of DEPARTMENTS) {
+    embed.addFields({
+      name: `${dept.emoji} ${dept.label}`,
+      value: dept.details,
+      inline: false,
+    });
+  }
 
   const select = new StringSelectMenuBuilder()
     .setCustomId('ticket_department_select')
-    .setPlaceholder('Choose a department to open a case...')
+    .setPlaceholder('Choose the best option for your needs...')
     .setMinValues(1)
     .setMaxValues(1)
     .addOptions(
