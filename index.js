@@ -1,6 +1,8 @@
 require('dotenv').config();
 
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
 
 const {
   Client,
@@ -94,10 +96,14 @@ const SLASH_COMMANDS = [
 // Helpers
 // ---------------------------------------------------------------------------
 function buildPanel() {
+  const bannerPath = path.join(__dirname, 'assets', 'support-banner.png');
+  const bannerAttachment = new AttachmentBuilder(bannerPath, { name: 'support-banner.png' });
+
   const embed = new EmbedBuilder()
     .setTitle('Support')
     .setDescription('Need to contact support? Choose the best option for your needs below.')
-    .setColor(0xed4245);
+    .setColor(0xed4245)
+    .setImage('attachment://support-banner.png');
 
   for (const dept of DEPARTMENTS) {
     embed.addFields({
@@ -109,7 +115,7 @@ function buildPanel() {
 
   const select = new StringSelectMenuBuilder()
     .setCustomId('ticket_department_select')
-    .setPlaceholder('Choose the best option for your needs...')
+    .setPlaceholder('Please select the desired support that you need.')
     .setMinValues(1)
     .setMaxValues(1)
     .addOptions(
@@ -127,6 +133,7 @@ function buildPanel() {
   return {
     embeds: [embed],
     components: [row],
+    files: [bannerAttachment],
   };
 }
 
@@ -180,7 +187,7 @@ async function ensurePanel() {
 
     const messages = await channel.messages.fetch({ limit: 50 });
     const existing = messages.find(
-      (m) => m.author.id === client.user.id && m.embeds.some((e) => e.title === 'Panora Support')
+      (m) => m.author.id === client.user.id && m.embeds.some((e) => e.title === 'Support')
     );
 
     const panel = buildPanel();
