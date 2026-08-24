@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const http = require('http');
+
 const {
   Client,
   GatewayIntentBits,
